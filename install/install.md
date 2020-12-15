@@ -8,6 +8,9 @@ nav_order: 2
 
 **Please follow the steps carefully. Make sure you keep the backup of the original firmware in a safe place in case you need to perform a recovery.**
 
+**Current QMK only works for PCB revision 3.0, if you have 1.2 please wait as
+we are working on a port for you. Please join the discord for more info on this**
+
 # Understanding how it works
 
 Before we begin, I would like to explain how this works in general. So in the
@@ -68,8 +71,12 @@ cd kemove_lpc_dfu
 make
 ```
 
+** OR You can download a pre-built binary **
+[Automatic Build System](https://ci.codetector.org/job/OpenKemove/job/kemove_lpc_dfu/job/master/)
+Download the `lpc_boot.bin`
+
 Yep, that's it. simple. Hopefully it has successfully built with no errors.
-You should see a few files under build. Most imporantly you see the lpc_boot.bin
+You should see a few files under build. Most imporantly you see the `lpc_boot.bin`
 
 # Step 2: Build QMK
 
@@ -86,6 +93,10 @@ make kemove/snowfox
 Once this is done, you should see a `kemove_snowfox_default.bin` in the directory.
 
 # Step 3: Backup!
+
+** WARNING **
+> This step might require Windows / macOS. It seem to often have problem on Linux. Feel free to try, (and reference the macOS steps). If you have problems,
+try use a Windows VM or a Windows machine.
 
 Let's start by taking a backup of the existing firmware. To do this, you will need to remove the PCB from the keyboard body and all the switches. Once you are done you should be left with a bare PCB. On the front side (Side that
 switches would be installed onto), you should be able to find some exposed
@@ -106,6 +117,26 @@ Once you are done with that, unplug the keyboard, and replug while holding
 the `ESC` key. This is the key that will trigger the DFU mode in the future.
 You should see a new device pop up in lsusb / device manager. It should be
 `OpenKemove DFU`
+
+** NOTE: macOS **
+For macOS users, please **DO NOT** open the flash drive in Finder. Instead
+please complete the operation using command line interface. You can do this
+with the following steps:
+
+0. Wait for the drive icon to show up in desktop.
+0. Open a termial
+0. `cd ` (space after `cd`) then drag the drive icon into your terminal. It should fill in the path. Then press enter.
+0.  ```bash
+    rm -rf firmware.bin
+    sync
+    ```
+0. `cp PATH_TO_LPC_BOOT.BIN .` (You can do the drag thing as well for `lpc_boot.bin`)
+0. `sync`
+0. `diskutil list`, then find the diskX where X is a number which contains the flash drive.
+0. `diskutil unmountDisk diskX` this is the diskX you found in the previous step.
+
+
+
 
 # Step 4: Flash QMK!
 Now we can use dfu-util to flash the device. Run `dfu-util` in the
