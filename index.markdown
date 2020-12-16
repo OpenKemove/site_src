@@ -6,25 +6,15 @@ nav_order: 0
 
 # Open Kemove
 
-This is an alternative firmware for Kemove Keyboards.
+**Open Kemove** is an alternative firmware for Kemove Keyboards. It is based on [QMK](https://qmk.fm/), a powerful open source keyboard firmware that gives you many customization options, such as user-defined macros, per key modifications and layered typing. 
 
-Currently only the `Snowfox` is supported. You are welcome to request support
-for other boards.
+## Development status
 
-## Status
-This project is still under heavy development and in its early stages. I would recommend to always have a backup keyboard if you are going to participate in the project. (i.e. if something arises you still have a second way to input keystrokes for long enough that you can either restore to the original firmware or find a solution).
+Currently, Open Kemove only supports the `Snowfox` keyboard, but you are welcome to request support for other Kemove models, like the `Shadow` and `Dierya DK61`.
 
-> Technically an on screen keyboard would work but I would not recommend :D
+This project is still under heavy development and in its early stages. 
 
-## Why port QMK
-[QMK](https://qmk.fm/) is a powerful open source keyboard firmware used by
-many open source keyboards that are on the market today. It is most famous
-for its appearance in the Plank and ErgoDox EZ keyboards.
-
-## Discord Server
-If you need help or just have general questions or want to chat, feel free to join the discord server at [Open Kemove Discord Server](https://discord.gg/TFeG4cb3yk)
-
-## What works
+### What works
 
 - [x] Keyboard over USB
 - [x] Keyboard over Bluetooth
@@ -36,8 +26,12 @@ If you need help or just have general questions or want to chat, feel free to jo
 
 ## How to install
 
-Please follow instructions in the [How to Install]({% link install/install.md %})
+Detailed instructions on how to install the Open Kemove firmware are available on [How to Install](install.md).
 
-## Warning
+## Discord Server
 
-the software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
+If you need help during the installation, want to contribute to the project, or just want to chat, feel free to join our discord server at [Open Kemove Discord Server](https://discord.gg/TFeG4cb3yk).
+
+## Disclaimer
+
+This software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
