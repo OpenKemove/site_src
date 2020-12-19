@@ -6,45 +6,33 @@ nav_order: 2
 
 # How to install
 
-**Please follow the steps carefully. Make sure you keep the backup of the original firmware in a safe place in case you need to perform a recovery.**
+## Before you begin
 
-**Current QMK only works for PCB revision 3.0, if you have 1.2 please wait as
-we are working on a port for you. Please join the discord for more info on this**
+**Check your keyboard's PCB version.** The current version of Open Kemove only supports keyboards featuring PCB revision 3.0. If you have 1.2 or 1.5, we are working on a port for you (more info about this on our [Discord server](https://discord.gg/TFeG4cb3yk)). To check which version you have, disassemble your keyboard and examine the lower part of the PCB ([pic for reference](pcb_revision_3.jpg)).
 
-# Understanding how it works
+**Have a backup keyboard available.** During the disassembly and flashing procedures, you will need to input some keystrokes. Even though an on-screen keyboard will make do, we do not recommend it :D
 
-Before we begin, I would like to explain how this works in general. So in the
-off chace that things go wrong, you at least know what to google or how to ask
-for help.
+**Follow these steps carefully.** Make sure to not skip the step for backing up the original firmware, in case you need to recover your keyboard to its original state.
 
-Please review the [How it all works]({% link install/theory.md %}) page.
+**Understand how it works.** Please review the [How it all works](theory.md) page. In the off chance that things go wrong, at least you will know what to google and how to ask for help. The [Discord server](https://discord.gg/TFeG4cb3yk) is a great place to ask for support, as people are always helpful there.
 
-Of course the discord server is always a great place to ask for help or just
-have any kind of general question. People are always helpful there.
-[Open Kemove Discord Server](https://discord.gg/TFeG4cb3yk)
+## Step 1: Set up your environment
 
-# Step 0: Gather Files
+We will assume you have Windows 10 and have WSL or WSL2 installed. If not please install that. We will have tags that explain what you need to do differently for certain sections of the instruction.
 
-<details>
-    <summary>Windows</summary>
-    We will assume you have Windows 10 and have WSL or WSL2 installed. If not
-    please install that. We will have tags that explain what you need to do
-    differently for certain sections of the instruction.
-</details>
-
-## ARM GCC Compiler / Toolchain
+### ARM GCC Compiler / Toolchain
 
 This is often a package in your package manager. On Ubuntu this can be done using
 ```bash
 sudo apt install gcc-arm-none-eabi binutils-arm-none-eabi make
 ```
 
-## Git
+### Git
 ```bash
 sudo apt install git
 ```
 
-## DFU-Tools
+### DFU-Tools
 
 For linux users, we strongly recommend the `dfu-util` tool to flash the firmware. If you run into permission problems you can always create udev rules, or simply run the tool using sudo.
 
@@ -54,18 +42,20 @@ sudo apt install dfu-util
 
 **NOTE: Do not run this under WSL it will not work. WSL has no USB support as of 2020**
 
-# Step 1: Get and Build bootloader
+## Step 2: Build bootloader
 
-0. Clone the bootloader repository.
+### Clone bootloader repository
 
 ```bash
 git clone https://github.com/OpenKemove/kemove_lpc_dfu.git --recursive --depth=1
 ```
+
 `recursive` here will tell git to clone all submodules.
 
 `depth=1` will tell git to not clone history. You can omit this if you planning on developing the firmware.
 
-0. Build the bootloader firmware
+### Compile bootloader
+
 ```bash
 cd kemove_lpc_dfu
 make
@@ -76,55 +66,63 @@ make
 Download the `lpc_boot.bin`
 
 Yep, that's it. simple. Hopefully it has successfully built with no errors.
-You should see a few files under build. Most imporantly you see the `lpc_boot.bin`
+You should see a few files under build. Most importantly `lpc_boot.bin`.
 
-# Step 2: Build QMK
+## Step 3: Build QMK firmware
 
-0. Clone our QMK Fork
+### Clone our QMK Fork
+
 ```bash
 git clone https://github.com/OpenKemove/qmk_firmware.git --recursive --depth=1
 ```
 
-0. Build QMK
+### Compile QMK
+
 ```bash
 cd qmk_firmware
 make kemove/snowfox
 ```
+
 Once this is done, you should see a `kemove_snowfox_default.bin` in the directory.
 
-# Step 3: Backup!
+## Step 4: Disassemble your keyboard
 
-** WARNING **
-> This step might require Windows / macOS. It seem to often have problem on Linux. Feel free to try, (and reference the macOS steps). If you have problems,
-try use a Windows VM or a Windows machine.
+With your keyboard disconnected from the computer, remove all keycaps and switches using the pullers provided by Kemove.
 
-Let's start by taking a backup of the existing firmware. To do this, you will need to remove the PCB from the keyboard body and all the switches. Once you are done you should be left with a bare PCB. On the front side (Side that
-switches would be installed onto), you should be able to find some exposed
-metal contacts (These are called test points, used for testing). What you want
-to do is find a resistor (100-1K Ohm will work). (If you can't find a resistor a wire or paper clip could work too but not ideal.)
+You will also need to remove the 7 screws fixing the PCB to the keyboard's case. These screws have soft heads, so use an adequate sized phillips screwdriver, otherwise you may end up with very difficult to remove dusted screws. 
 
-Since you should alreay have the battey detached, the keyboard should have no
-power unless we plug in the cable.
+When lifting the PCB from the case, gently detach the wire connecting the battery to the back of the PCB. You will have a bare board like the one below.
 
-You want to find the test point that says `ISP` next to it. Then you will need to find another test point that says `GNDx` (x here could be any number). Any ground pad could work. You will connect the `ISP` point and `GND` with your resistor/wire, then plugin the keyboard. You can remove the wire after you plug in. You should see a new "flash drive" show up on your computer. Open it,
-you can see the `firmware.bin` file. Copy it to a safe place, it should be exactally `64 KB` in size. (This might vary depending on how Windows / macOS /
-Linux round file size differently.) This is your backup of the old firmware.
-Once this is done, you can `DELETE` this file from the "flash drive". Then
-you can copy the bootloader (`lpc_boot.bin`) into the "flash drive". You do
-not need to rename it.
+![Bare PCB](pcb_revision_3.jpg)
 
-Once you are done with that, unplug the keyboard, and replug while holding
-the `ESC` key. This is the key that will trigger the DFU mode in the future.
-You should see a new device pop up in lsusb / device manager. It should be
-`OpenKemove DFU`
+## Step 5: Connect the PCB in flash drive mode
 
-** NOTE: macOS **
-For macOS users, please **DO NOT** open the flash drive in Finder. Instead
-please complete the operation using command line interface. You can do this
-with the following steps:
+To execute this step you will need to close a circuit in your PCB using either a resistor (100-1K Ohm is better), a wire or a paper clip, so gather one of these tools.
+
+Looking at the PCB's front (the side that swiches would be installed onto), you will find some exposed metal contacts. These are called test points. First locate a test point with the `ISP` description next to it. Then locate the test points with the `GNDx` description (where `x` could be any number). 
+
+Next, using your resistor, wire or paper clip, connect the `ISP` metal contact to any one of the `GNDx` contacts. While holding this connection, plugin the PCB to a computer using the keyboard's USB cable. If you did everything correctly, a new "flash drive" should show up on the computer (and you can drop the wire contacts). Otherwise, you probably did not connect the `ISP` and `GNDx` pads properly, so please try again.
+
+Below is an example of a rudimentary paper clip connection closing the circuit between the `ISP` and `GND2` test points.
+
+![Closing the circuit with a rudimentary paper clip connection](paper_clip_connection.jpg)
+
+## Step 6: Backup original firmware and place bootloader
+
+>**Attention Linux users:** This step might require using a Windows machine or VM, or MacOS, as it often have problems on Linux. But feel free to also try the MacOS steps at the end of this section. 
+
+With the PCB connected as a "flash drive", open it in Explorer and locate the `firmware.bin` file. This is the original firmware provided by Kemove and it should be 64 KB in size. Copy this file to a safe place in your computer, as you will revert to this backup in case anything goes wrong during the flashing procedure.
+
+After certifying that you backed up the original firmware, delete the `firmware.bin` file from the "flash drive". Then copy the `lpc_boot.bin` bootloader file that you compiled in step 1 to the "flash drive". There is no need to rename it.
+
+Once you are done with that, unplug the PCB from the computer. Place a single switch in the `ESC` key slot and hold it down while replugging the board to the computer. This will trigger *Device Firmware Upgrade* (DFU) mode and, if you check your computer's `Device Manager`/`lsusb`, you should see a new `DFU` device in there.
+
+### Instructions for MacOS users
+
+Please **DO NOT** open the flash drive in Finder. Instead, complete the operation using the command line interface. You can do this with the following steps:
 
 0. Wait for the drive icon to show up in desktop.
-0. Open a termial
+0. Open a terminal
 0. `cd ` (space after `cd`) then drag the drive icon into your terminal. It should fill in the path. Then press enter.
 0.  ```bash
     rm -rf firmware.bin
@@ -135,10 +133,8 @@ with the following steps:
 0. `diskutil list`, then find the diskX where X is a number which contains the flash drive.
 0. `diskutil unmountDisk diskX` this is the diskX you found in the previous step.
 
+## Step 7: Flash QMK!
 
-
-
-# Step 4: Flash QMK!
 Now we can use dfu-util to flash the device. Run `dfu-util` in the
 `qmk_firmware` directory. Make sure it can detect the device. You can verify this by running. Check for the pair *feed:6969*.
 
