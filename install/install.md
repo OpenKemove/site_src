@@ -1,5 +1,5 @@
 ---
-title: How to Install
+title: install
 layout: page
 nav_order: 2
 ---
@@ -8,13 +8,16 @@ nav_order: 2
 
 ## Before you begin
 
-**Check your keyboard's PCB version.** The current version of Open Kemove only supports keyboards featuring PCB revision 3.0. If you have 1.2 or 1.5, we are working on a port for you (more info about this on our [Discord server](https://discord.gg/TFeG4cb3yk)). To check which version you have, disassemble your keyboard and examine the lower part of the PCB ([pic for reference](pcb_revision_3.jpg)).
+**Check your keyboard's PCB version.** The current version of Open Kemove only supports keyboards featuring PCB revision 3.0. If you have 1.2 or 1.5, we are working on a port for you (more info about this on our [Discord server](https://discord.gg/TFeG4cb3yk)). To check which version you have, disassemble your keyboard and examine the lower part of the PCB
 
+<details>
+![]({% link install/pcb_revision_3.jpg %})
+</details>
 **Have a backup keyboard available.** During the disassembly and flashing procedures, you will need to input some keystrokes. Even though an on-screen keyboard will make do, we do not recommend it :D
 
 **Follow these steps carefully.** Make sure to not skip the step for backing up the original firmware, in case you need to recover your keyboard to its original state.
 
-**Understand how it works.** Please review the [How it all works](theory.md) page. In the off chance that things go wrong, at least you will know what to google and how to ask for help. The [Discord server](https://discord.gg/TFeG4cb3yk) is a great place to ask for support, as people are always helpful there.
+**Understand how it works.** Please review the [How it all works]({% link install/theory.md %}) page. In the off chance that things go wrong, at least you will know what to google and how to ask for help. The [Discord server](https://discord.gg/TFeG4cb3yk) is a great place to ask for support, as people are always helpful there.
 
 ## Step 1: Set up your environment
 
@@ -51,7 +54,6 @@ Download the `lpc_boot_Vxx.bin` where xx is your version. For example 1.5 would 
 
 **OR You can build the bootloader yourself**
 <details>
-    <summary>Instructions for building bootloader</summary>
 
 ### Clone bootloader repository
 

@@ -6,13 +6,13 @@ nav_order: 0
 
 # Open Kemove
 
-**Open Kemove** is an alternative firmware for Kemove Keyboards. It is based on [QMK](https://qmk.fm/), a powerful open source keyboard firmware that gives you many customization options, such as user-defined macros, per key modifications and layered typing. 
+**Open Kemove** is an alternative firmware for Kemove Keyboards. It is based on [QMK](https://qmk.fm/), a powerful open source keyboard firmware that gives you many customization options, such as user-defined macros, per key modifications and layered typing.
 
 ## Development status
 
 Currently, Open Kemove only supports the `Snowfox` keyboard, but you are welcome to request support for other Kemove models, like the `Shadow` and `Dierya DK61`.
 
-This project is still under heavy development and in its early stages. 
+This project is still under heavy development and in its early stages.
 
 ### What works
 
@@ -26,7 +26,7 @@ This project is still under heavy development and in its early stages.
 
 ## How to install
 
-Detailed instructions on how to install the Open Kemove firmware are available on [How to Install](install.md).
+Detailed instructions on how to install the Open Kemove firmware are available on [How to Install]({% link install/install.md %}).
 
 ## Discord Server
 
