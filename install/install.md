@@ -42,7 +42,16 @@ sudo apt install dfu-util
 
 **NOTE: Do not run this under WSL it will not work. WSL has no USB support as of 2020**
 
-## Step 2: Build bootloader
+## Step 2: Get the bootloader
+
+Simply download the version matching your PCB revision from:
+
+[Jenkins CI Server](https://ci.codetector.org/job/OpenKemove/job/kemove_lpc_dfu/job/master/)
+Download the `lpc_boot_Vxx.bin` where xx is your version. For example 1.5 would be 1_5.
+
+**OR You can build the bootloader yourself**
+<details>
+    <summary>Instructions for building bootloader</summary>
 
 ### Clone bootloader repository
 
@@ -60,13 +69,10 @@ git clone https://github.com/OpenKemove/kemove_lpc_dfu.git --recursive --depth=1
 cd kemove_lpc_dfu
 make
 ```
-
-** OR You can download a pre-built binary **
-[Automatic Build System](https://ci.codetector.org/job/OpenKemove/job/kemove_lpc_dfu/job/master/)
-Download the `lpc_boot.bin`
-
 Yep, that's it. simple. Hopefully it has successfully built with no errors.
-You should see a few files under build. Most importantly `lpc_boot.bin`.
+You should see a few files under build. Namely `lpc_boot_v3/v1_5.bin`
+</details>
+
 
 ## Step 3: Build QMK firmware
 
@@ -80,16 +86,18 @@ git clone https://github.com/OpenKemove/qmk_firmware.git --recursive --depth=1
 
 ```bash
 cd qmk_firmware
-make kemove/snowfox
+make kemove/snowfox/v3
 ```
 
-Once this is done, you should see a `kemove_snowfox_default.bin` in the directory.
+If you have 1.5 please replace `v3` with `v1_5`
+
+Once this is done, you should see a `kemove_snowfox_vxx_default.bin` in the directory.
 
 ## Step 4: Disassemble your keyboard
 
 With your keyboard disconnected from the computer, remove all keycaps and switches using the pullers provided by Kemove.
 
-You will also need to remove the 7 screws fixing the PCB to the keyboard's case. These screws have soft heads, so use an adequate sized phillips screwdriver, otherwise you may end up with very difficult to remove dusted screws. 
+You will also need to remove the 7 screws fixing the PCB to the keyboard's case. These screws have soft heads, so use an adequate sized phillips screwdriver, otherwise you may end up with very difficult to remove dusted screws.
 
 When lifting the PCB from the case, gently detach the wire connecting the battery to the back of the PCB. You will have a bare board like the one below.
 
@@ -99,7 +107,7 @@ When lifting the PCB from the case, gently detach the wire connecting the batter
 
 To execute this step you will need to close a circuit in your PCB using either a resistor (100-1K Ohm is better), a wire or a paper clip, so gather one of these tools.
 
-Looking at the PCB's front (the side that swiches would be installed onto), you will find some exposed metal contacts. These are called test points. First locate a test point with the `ISP` description next to it. Then locate the test points with the `GNDx` description (where `x` could be any number). 
+Looking at the PCB's front (the side that swiches would be installed onto), you will find some exposed metal contacts. These are called test points. First locate a test point with the `ISP` description next to it. Then locate the test points with the `GNDx` description (where `x` could be any number).
 
 Next, using your resistor, wire or paper clip, connect the `ISP` metal contact to any one of the `GNDx` contacts. While holding this connection, plugin the PCB to a computer using the keyboard's USB cable. If you did everything correctly, a new "flash drive" should show up on the computer (and you can drop the wire contacts). Otherwise, you probably did not connect the `ISP` and `GNDx` pads properly, so please try again.
 
@@ -109,7 +117,7 @@ Below is an example of a rudimentary paper clip connection closing the circuit b
 
 ## Step 6: Backup original firmware and place bootloader
 
->**Attention Linux users:** This step might require using a Windows machine or VM, or MacOS, as it often have problems on Linux. But feel free to also try the MacOS steps at the end of this section. 
+>**Attention Linux users:** This step might require using a Windows machine or VM, or MacOS, as it often have problems on Linux. But feel free to also try the MacOS steps at the end of this section.
 
 With the PCB connected as a "flash drive", open it in Explorer and locate the `firmware.bin` file. This is the original firmware provided by Kemove and it should be 64 KB in size. Copy this file to a safe place in your computer, as you will revert to this backup in case anything goes wrong during the flashing procedure.
 
@@ -128,7 +136,7 @@ Please **DO NOT** open the flash drive in Finder. Instead, complete the operatio
     rm -rf firmware.bin
     sync
     ```
-0. `cp PATH_TO_LPC_BOOT.BIN .` (You can do the drag thing as well for `lpc_boot.bin`)
+0. `cp PATH_TO_LPC_BOOT.BIN .` (You can do the drag and drop thing as well for `lpc_boot.bin`)
 0. `sync`
 0. `diskutil list`, then find the diskX where X is a number which contains the flash drive.
 0. `diskutil unmountDisk diskX` this is the diskX you found in the previous step.
@@ -145,7 +153,7 @@ Now we can use dfu-util to flash the device. Run `dfu-util` in the
 dfu-util -l
 ```
 you should see something like this:
-```
+```bash
 dfu-util 0.9
 
 Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
@@ -157,7 +165,7 @@ Found DFU: [feed:6969] ver=0200, devnum=4, cfg=1, intf=0, path="1-12", alt=0, na
 ```
 Then you can flash the firmware by using
 ```bash
-dfu-util -d feed:6969 -D kemove_snowfox_default.bin
+dfu-util -d feed:6969 -D kemove_snowfox_vxx_default.bin
 ```
 If you run into any error, please try connecting the keyboard directly to
 the computer without any HUB etc. Or just try a few times. Remeber to unplug / replug (while holding esc) between tries.
