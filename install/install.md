@@ -95,6 +95,14 @@ If you have 1.5 please replace `v3` with `v1_5`
 
 Once this is done, you should see a `kemove_snowfox_vxx_default.bin` in the directory.
 
+**Windows users**
+Run the following commands to copy the file back to `C:/` drive. Run these in the same prompt
+
+```bash
+mkdir -p /mnt/c/keymove
+cp kemove_snowfox_vxx_default.bin /mnt/c/keymove/
+```
+
 ## Step 4: Disassemble your keyboard
 
 With your keyboard disconnected from the computer, remove all keycaps and switches using the pullers provided by Kemove.
@@ -145,11 +153,19 @@ Please **DO NOT** open the flash drive in Finder. Instead, complete the operatio
 
 ## Step 7: Flash QMK!
 
+> **Attention: Windows Users:**
+
+> You can't use `dfu-util` directly in `WSL`. Please follow this short guide to run `dfu-util` from windows before proceeding
+> 1. Install generic libusb driver for the bootloader [This Guide](https://www.hanselman.com/blog/how-to-fix-dfuutil-stm-winusb-zadig-bootloaders-and-other-firmware-flashing-issues-on-windows) 
+> 2. Download dfu-util for windows via [This Link](http://dfu-util.sourceforge.net/releases/). We've tested with `dfu-util-0.9-win64.zip`
+> 3. Extract dfu-util zip to `C:/Kemove`. Move all the binary (.exe) files to `C:/Kemove`. This means the `.exe`s and the `kemove_snowfox_vxx_default.bin` are in the same folder
+> 4. Open a command prompt
+> 5. Navigate the command  to `C:/Kemove` by using `cd C:/Kemove`
+> 6. Follow the remainder of the guide, noting we are running `dfu-util` from `C:/Kemove` rather than the `qmk_firmware` directory
+
+### All users ###
 Now we can use dfu-util to flash the device. Run `dfu-util` in the
 `qmk_firmware` directory. Make sure it can detect the device. You can verify this by running. Check for the pair *feed:6969*.
-
-**Note: Windows Users** Please follow [This Guide](https://www.hanselman.com/blog/how-to-fix-dfuutil-stm-winusb-zadig-bootloaders-and-other-firmware-flashing-issues-on-windows) on how to install the generic libusb driver
-
 
 ```bash
 dfu-util -l
